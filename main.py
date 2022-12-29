@@ -27,9 +27,9 @@ while running:
 
     # Fill the background with white
     screen.fill((255, 255, 255))
-    check_collision(objects)
-    object1.move(0.1)
-    object1.render(screen)
+    # check_collision(objects)
+    object1.move(0.1, objects)
+    object1.render(screen, 2)
     object2.render(screen)
     object3.render(screen)
 

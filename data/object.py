@@ -6,22 +6,35 @@ class GameObject:
         self.x = x
         self.y = y
         self.image = pygame.image.load(image_path)
+        self.collision = False
 
-    def render(self, surface):
-        surface.blit(self.image, (self.x, self.y))
-
-    def move(self, speed):
+    def move(self, speed, objects):
         keys = pygame.key.get_pressed()
+        new_x = self.x
+        new_y = self.y
         if keys[pygame.K_w]:
-            self.y -= speed
+            new_y -= speed
         if keys[pygame.K_s]:
-            self.y += speed
+            new_y += speed
         if keys[pygame.K_a]:
-            self.x -= speed
+            new_x -= speed
         if keys[pygame.K_d]:
-            self.x += speed
+            new_x += speed
 
-    def check_collision(object1, object2):
-        rect1 = object1.image.get_rect(topleft=(object1.x, object1.y))
-        rect2 = object2.image.get_rect(topleft=(object2.x, object2.y))
-        return rect1.colliderect(rect2)
+        rect1 = self.image.get_rect(topleft=(new_x, new_y))
+        collision = False
+        for object in objects:
+            if object == self:
+                continue
+            rect2 = object.image.get_rect(topleft=(object.x, object.y))
+            if rect1.colliderect(rect2):
+                collision = True
+                break
+
+        if not collision:
+            self.x = new_x
+            self.y = new_y
+
+    def render(self, surface, scale=1):
+        scale_matrix = pygame.transform.scale(self.image, (32 * scale, 32 * scale))
+        surface.blit(scale_matrix, (self.x, self.y))
